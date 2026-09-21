@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "default": "deny",
+  "tools": {
+    "workspace_list": {
+      "effect": "allow",
+      "network": "deny",
+      "workspace": "read-only"
+    },
+    "workspace_read_text": {
+      "effect": "allow",
+      "network": "deny",
+      "workspace": "read-only"
+    },
+    "sandbox_run_python": {
+      "effect": "require-human-approval",
+      "network": "deny",
+      "workspace": "read-only"
+    }
+  },
+  "not_enabled": [
+    "free_form_shell",
+    "web_fetch",
+    "browser_automation",
+    "database_query",
+    "external_api",
+    "workspace_write"
+  ]
+}

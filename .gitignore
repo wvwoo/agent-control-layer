@@ -1,0 +1,20 @@
+.DS_Store
+.venv/
+.venv-inference/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+.hermes/
+models/
+outputs/
+*.log
+
+# Reference clone of the upstream project (pinned commit in docs/UPSTREAM_PROVENANCE.md); never part of this repository.
+upstream/
+.agentctl/

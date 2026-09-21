@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "note": "Generated semantics: all properties are required for strict tool-calling compatibility. The runtime independently validates every call.",
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "workspace_list",
+        "description": "List non-sensitive entries below the approved workspace root.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {"type": "string", "maxLength": 512},
+            "max_depth": {"type": "integer", "minimum": 0, "maximum": 3},
+            "max_entries": {"type": "integer", "minimum": 1, "maximum": 200}
+          },
+          "required": ["path", "max_depth", "max_entries"]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "workspace_read_text",
+        "description": "Read bounded UTF-8 text below the approved workspace root.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {"type": "string", "minLength": 1, "maxLength": 512},
+            "max_bytes": {"type": "integer", "minimum": 1, "maximum": 65536}
+          },
+          "required": ["path", "max_bytes"]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "sandbox_run_python",
+        "description": "Run bounded Python only after a real human approval has been attached by the trusted controller.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "code": {"type": "string", "minLength": 1, "maxLength": 16384},
+            "timeout_s": {"type": "integer", "minimum": 1, "maximum": 30}
+          },
+          "required": ["code", "timeout_s"]
+        }
+      }
+    }
+  ]
+}

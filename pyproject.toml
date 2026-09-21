@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hermes-agent-secure"
+version = "0.1.0"
+description = "A deny-by-default local controller for Hermes function calls"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "pydantic>=2.6,<3",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8,<9",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
+
+[tool.setuptools.packages.find]
+where = ["src"]
