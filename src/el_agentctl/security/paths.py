@@ -4,10 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path, PureWindowsPath
 
-
-SENSITIVE_COMPONENTS = frozenset(
-    {".git", ".env", ".ssh", "secrets", ".hermes", ".venv", "venv"}
-)
+SENSITIVE_COMPONENTS = frozenset({".git", ".env", ".ssh", "secrets", ".agentctl", ".venv", "venv"})
 INTERNAL_COMPONENTS = frozenset({".pytest_cache", "__pycache__", "build", "dist"})
 
 
@@ -27,13 +24,10 @@ def resolve_workspace_path(workspace_root: Path, requested: str) -> Path:
         raise WorkspacePathError("absolute paths are not permitted")
 
     parts = raw_path.parts
-    if any(part in {"", ".", ".."} for part in parts):
-        if requested not in {"", "."}:
-            raise WorkspacePathError("path traversal is not permitted")
+    if any(part in {"", ".", ".."} for part in parts) and requested not in {"", "."}:
+        raise WorkspacePathError("path traversal is not permitted")
     if any(
-        part in SENSITIVE_COMPONENTS
-        or part in INTERNAL_COMPONENTS
-        or part.endswith(".egg-info")
+        part in SENSITIVE_COMPONENTS or part in INTERNAL_COMPONENTS or part.endswith(".egg-info")
         for part in parts
     ):
         raise WorkspacePathError("path targets a protected workspace component")

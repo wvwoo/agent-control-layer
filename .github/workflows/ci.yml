@@ -1,0 +1,27 @@
+name: ci
+on: [push, pull_request]
+permissions: { contents: read }
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0, persist-credentials: false }
+      - uses: astral-sh/setup-uv@v6
+        with: { version: "0.12.17" }
+      - run: uv sync --locked -p 3.12
+      - run: uv run --locked ruff check .
+      - run: uv run --locked ruff format --check .
+      - run: uv run --locked mypy
+      - run: uv run --locked pytest --junitxml=junit.xml
+      - name: dependency audit
+        run: |
+          uv export --locked --no-dev --no-emit-project --format requirements-txt > req.txt
+          uv run --locked pip-audit --strict --requirement req.txt
+          uv run --locked pip-audit --requirement req.txt --format cyclonedx-json --output sbom.cdx.json
+      - name: secret scan (full history)
+        uses: gitleaks/gitleaks-action@v2
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: evidence, path: "junit.xml\nsbom.cdx.json\ncoverage.xml" }

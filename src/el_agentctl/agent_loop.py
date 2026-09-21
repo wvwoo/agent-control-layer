@@ -2,19 +2,18 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-from hermes_agent.policy import PolicyContext, PolicyEngine
-from hermes_agent.security.audit import AuditLog
-from hermes_agent.tool_protocol import (
+from el_agentctl.policy import PolicyContext, PolicyEngine
+from el_agentctl.security.audit import AuditLog
+from el_agentctl.tool_protocol import (
     ToolCallError,
     WorkspaceListArguments,
     WorkspaceReadTextArguments,
     parse_tool_call,
 )
-from hermes_agent.tools.workspace import list_workspace, read_text
+from el_agentctl.tools.workspace import list_workspace, read_text
 
 
 class ToolController:
@@ -59,6 +58,7 @@ class ToolController:
                 "requires_human_approval": decision.requires_human_approval,
             }
 
+        result: list[dict[str, str]] | str | dict[str, str | None]
         if isinstance(call.arguments, WorkspaceListArguments):
             result = list_workspace(
                 self.workspace_root,

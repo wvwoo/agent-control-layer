@@ -12,7 +12,7 @@ hermes sandbox
 ```
 
 ```bash
-HERMES_PYTHON=~/.venvs/hermes-agent/bin/python
+HERMES_PYTHON=.venv/bin/python
 "$HERMES_PYTHON" -m pytest
 "$HERMES_PYTHON" scripts/function_call_smoke.py
 "$HERMES_PYTHON" scripts/export_tool_registry.py

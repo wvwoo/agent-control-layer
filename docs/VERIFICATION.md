@@ -2,14 +2,14 @@
 
 ## `PASS-LOCAL`
 
-- Controller tests: `16 passed` with Python `3.12.13` from the local, non-iCloud controller environment `~/.venvs/hermes-agent`.
+- Controller tests: `16 passed` with Python `3.12.13` from the local, non-iCloud controller environment `.venv`.
 - Dependency consistency: `pip check` returned `No broken requirements found`.
 - Synthetic strict Function Calling: `workspace_list` parsed, policy-authorized, dispatched, and recorded in a valid audit chain.
 - Registry parity: runtime-emitted OpenAI tool schemas exactly match `config/tool_registry.json`.
 - Docker image: `hermes-sandbox:dev` image `sha256:164944d4e92945b3056f9a383285dc6410c5cf2bf364eadd915140f2dcd2f46c`, configured as UID/GID `10001:10001`.
 - Real sandbox check: an approved task emitted `SECRET_ABSENT`, `WORKSPACE_READ_ONLY`, and `EGRESS_BLOCKED`.
 - Upstream source: official Nous reference cloned clean at `ea3c4723e4cefdac760d483ccac6c8a428c95ab8`.
-- Terminal launcher: a fresh interactive `zsh` resolves `hermes` to `~/.local/bin/hermes`; `hermes smoke` returned an `ok` controller result and `hermes test` exited successfully.
+- Terminal launcher: a fresh interactive `zsh` resolves `hermes` to `<local path>`; `hermes smoke` returned an `ok` controller result and `hermes test` exited successfully.
 
 ## `PARTIAL`
 

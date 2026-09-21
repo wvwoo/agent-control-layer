@@ -1,16 +1,28 @@
-HERMES_VENV ?= ~/.venvs/hermes-agent
-PYTHON ?= $(HERMES_VENV)/bin/python
+# All targets run through uv with the locked environment (uv.lock). No absolute paths.
+.PHONY: verify test lint type audit smoke sandbox export-tools
 
-.PHONY: test smoke sandbox export-tools
+verify: lint type test audit
 
 test:
-	$(PYTHON) -m pytest
+	uv run --locked pytest
+
+lint:
+	uv run --locked ruff check .
+	uv run --locked ruff format --check .
+
+type:
+	uv run --locked mypy
+
+audit:
+	uv export --locked --no-dev --no-emit-project --format requirements-txt > .audit-requirements.txt
+	uv run --locked pip-audit --strict --requirement .audit-requirements.txt
+	rm -f .audit-requirements.txt
 
 smoke:
-	$(PYTHON) scripts/function_call_smoke.py
+	uv run --locked python scripts/function_call_smoke.py
 
 sandbox:
-	$(PYTHON) scripts/verify_sandbox.py
+	uv run --locked python scripts/verify_sandbox.py
 
 export-tools:
-	$(PYTHON) scripts/export_tool_registry.py
+	uv run --locked python scripts/export_tool_registry.py

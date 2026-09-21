@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from hermes_agent.security.paths import WorkspacePathError, resolve_workspace_path
+from el_agentctl.security.paths import WorkspacePathError, resolve_workspace_path
 
 
 def test_path_rejects_absolute_traversal_and_sensitive_components(tmp_path: Path) -> None:
@@ -17,7 +17,7 @@ def test_path_rejects_absolute_traversal_and_sensitive_components(tmp_path: Path
         "secrets/key",
         ".pytest_cache/v",
         "build/output",
-        "src/hermes_agent_secure.egg-info/PKG-INFO",
+        "src/el_agentctl_secure.egg-info/PKG-INFO",
     ]:
         with pytest.raises(WorkspacePathError):
             resolve_workspace_path(tmp_path, requested)

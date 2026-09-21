@@ -5,7 +5,6 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-
 SENSITIVE_KEY_MARKERS = ("secret", "token", "password", "api_key", "apikey", "authorization")
 
 

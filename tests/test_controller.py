@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from hermes_agent.agent_loop import ToolController
-from hermes_agent.policy import PolicyContext
+from el_agentctl.agent_loop import ToolController
+from el_agentctl.policy import PolicyContext
 
 
 def test_controller_lists_workspace_and_audits(tmp_path: Path) -> None:
@@ -12,7 +12,7 @@ def test_controller_lists_workspace_and_audits(tmp_path: Path) -> None:
     (tmp_path / "build").mkdir()
     (tmp_path / "build" / "generated.txt").write_text("internal", encoding="utf-8")
     (tmp_path / ".pytest_cache").mkdir()
-    controller = ToolController(tmp_path, tmp_path / ".hermes" / "audit" / "events.jsonl")
+    controller = ToolController(tmp_path, tmp_path / ".agentctl" / "audit" / "events.jsonl")
 
     response = controller.process(
         {
@@ -26,7 +26,7 @@ def test_controller_lists_workspace_and_audits(tmp_path: Path) -> None:
 
 
 def test_controller_never_self_approves_python(tmp_path: Path) -> None:
-    controller = ToolController(tmp_path, tmp_path / ".hermes" / "audit" / "events.jsonl")
+    controller = ToolController(tmp_path, tmp_path / ".agentctl" / "audit" / "events.jsonl")
     payload = {
         "name": "sandbox_run_python",
         "arguments": {"code": "print('hello')", "timeout_s": 1},

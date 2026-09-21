@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from hermes_agent.security.untrusted import as_untrusted_tool_message
+from el_agentctl.security.untrusted import as_untrusted_tool_message
 
 
 def test_untrusted_data_never_becomes_a_system_instruction() -> None:

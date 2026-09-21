@@ -32,15 +32,15 @@ There is deliberately no free-form shell, arbitrary HTTP client, browser, databa
 
 ## Controller setup
 
-Use the native arm64 Python 3.12 installed on this Mac, not the default Python 3.14. Because this project resides in an iCloud-backed folder, its canonical controller environment is local to the machine at `~/.venvs/hermes-agent`:
+Use the native arm64 Python 3.12 installed on this Mac, not the default Python 3.14. Because this project resides in an iCloud-backed folder, its canonical controller environment is local to the machine at `.venv`:
 
 ```bash
-HERMES_VENV=~/.venvs/hermes-agent
-python3.12 -m venv "$HERMES_VENV"
-"$HERMES_VENV/bin/python" -m pip install -r requirements-controller.lock
-"$HERMES_VENV/bin/python" -m pip install --no-deps --no-build-isolation .
-"$HERMES_VENV/bin/python" -m pytest
-"$HERMES_VENV/bin/python" scripts/function_call_smoke.py
+AGENTCTL_VENV=.venv
+python3.12 -m venv "$AGENTCTL_VENV"
+"$AGENTCTL_VENV/bin/python" -m pip install -r requirements-controller.lock
+"$AGENTCTL_VENV/bin/python" -m pip install --no-deps --no-build-isolation .
+"$AGENTCTL_VENV/bin/python" -m pytest
+"$AGENTCTL_VENV/bin/python" scripts/function_call_smoke.py
 ```
 
 The smoke check validates a harmless `workspace_list` function-call payload. `scripts/verify_sandbox.py` runs only after the optional Docker image is built; it verifies that a trusted, approved Python task cannot reach an external IP. Neither check runs a model.

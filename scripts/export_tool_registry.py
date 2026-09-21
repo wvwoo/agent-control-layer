@@ -5,8 +5,7 @@ from __future__ import annotations
 
 import json
 
-from hermes_agent.tool_protocol import openai_tools
-
+from el_agentctl.tool_protocol import openai_tools
 
 print(
     json.dumps(

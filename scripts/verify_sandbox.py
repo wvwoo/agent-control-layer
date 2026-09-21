@@ -6,21 +6,20 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from hermes_agent.executors.docker import run_approved_python
-from hermes_agent.tool_protocol import SandboxRunPythonArguments
-
+from el_agentctl.executors.docker import run_approved_python
+from el_agentctl.tool_protocol import SandboxRunPythonArguments
 
 root = Path(__file__).resolve().parents[1]
-os.environ["HERMES_TEST_SECRET"] = "must-not-enter-sandbox"
+os.environ["AGENTCTL_TEST_SECRET"] = "must-not-enter-sandbox"
 task = SandboxRunPythonArguments(
     code=(
         "import os\n"
         "import socket\n"
         "from pathlib import Path\n"
-        "if 'HERMES_TEST_SECRET' in os.environ:\n"
+        "if 'AGENTCTL_TEST_SECRET' in os.environ:\n"
         "    raise SystemExit('host secret unexpectedly available')\n"
         "print('SECRET_ABSENT')\n"
-        "probe = Path('/workspace/.hermes-write-probe')\n"
+        "probe = Path('/workspace/.agentctl-write-probe')\n"
         "try:\n"
         "    probe.write_text('must fail', encoding='utf-8')\n"
         "except OSError:\n"
@@ -40,7 +39,7 @@ task = SandboxRunPythonArguments(
 result = run_approved_python(
     approved_call=task,
     workspace_root=root,
-    image="hermes-sandbox:dev",
+    image="el-agentctl-sandbox:dev",
 )
 print(result.stdout, end="")
 if result.stderr:

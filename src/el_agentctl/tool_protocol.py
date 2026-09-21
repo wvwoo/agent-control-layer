@@ -5,10 +5,9 @@ from __future__ import annotations
 import json
 from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Any, Literal, TypeAlias
+from typing import Any, Literal, TypeAlias, cast
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
-
 
 ToolName: TypeAlias = Literal[
     "workspace_list",
@@ -41,9 +40,7 @@ class SandboxRunPythonArguments(StrictToolArguments):
     timeout_s: int = Field(ge=1, le=30)
 
 
-ToolArguments: TypeAlias = (
-    WorkspaceListArguments | WorkspaceReadTextArguments | SandboxRunPythonArguments
-)
+ToolArguments: TypeAlias = WorkspaceListArguments | WorkspaceReadTextArguments | SandboxRunPythonArguments
 
 
 class ToolEnvelope(BaseModel):
@@ -88,7 +85,7 @@ def parse_tool_call(raw: str | bytes | Mapping[str, Any]) -> ParsedToolCall:
     except ValidationError as error:
         raise ToolCallError("tool call violates the registered schema") from error
 
-    return ParsedToolCall(name=envelope.name, arguments=arguments)
+    return ParsedToolCall(name=envelope.name, arguments=cast(ToolArguments, arguments))
 
 
 def _strict_parameters(model: type[StrictToolArguments]) -> dict[str, Any]:
@@ -112,8 +109,7 @@ def openai_tools() -> list[dict[str, Any]]:
         "workspace_list": "List non-sensitive entries below the approved workspace root.",
         "workspace_read_text": "Read bounded UTF-8 text below the approved workspace root.",
         "sandbox_run_python": (
-            "Run bounded Python only after a real human approval has been attached "
-            "by the trusted controller."
+            "Run bounded Python only after a real human approval has been attached by the trusted controller."
         ),
     }
     return [

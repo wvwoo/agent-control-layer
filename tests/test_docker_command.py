@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from hermes_agent.executors.docker import build_docker_command
+from el_agentctl.executors.docker import build_docker_command
 
 
 def test_docker_command_is_fixed_and_offline(tmp_path: Path) -> None:
@@ -15,7 +15,7 @@ def test_docker_command_is_fixed_and_offline(tmp_path: Path) -> None:
     runner.mkdir()
     output.mkdir()
     command = build_docker_command(
-        image="hermes-sandbox:dev",
+        image="el-agentctl-sandbox:dev",
         workspace_root=workspace,
         runner_directory=runner,
         output_directory=output,
@@ -35,7 +35,7 @@ def test_docker_command_rejects_image_injection(tmp_path: Path) -> None:
         directory.mkdir()
     with pytest.raises(ValueError):
         build_docker_command(
-            image="hermes:dev;whoami",
+            image="agentctl:dev;whoami",
             workspace_root=tmp_path / "workspace",
             runner_directory=tmp_path / "runner",
             output_directory=tmp_path / "output",

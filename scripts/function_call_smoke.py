@@ -6,11 +6,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from hermes_agent.agent_loop import ToolController
-
+from el_agentctl.agent_loop import ToolController
 
 root = Path(__file__).resolve().parents[1]
-controller = ToolController(root, root / ".hermes" / "audit" / "smoke.jsonl")
+controller = ToolController(root, root / ".agentctl" / "audit" / "smoke.jsonl")
 payload = {
     "name": "workspace_list",
     "arguments": {"path": "", "max_depth": 1, "max_entries": 20},

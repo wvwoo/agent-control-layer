@@ -3,24 +3,55 @@ requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "hermes-agent-secure"
-version = "0.1.0"
-description = "A deny-by-default local controller for Hermes function calls"
+name = "el-agent-control-layer"
+version = "0.2.0"
+description = "Exec Logic agent control layer: deny-by-default authorization, human approval and hash-chained audit for model tool calls"
 readme = "README.md"
+license = { text = "Proprietary" }
 requires-python = ">=3.12,<3.13"
-dependencies = [
-  "pydantic>=2.6,<3",
+dependencies = ["pydantic>=2.13,<3"]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.4,<9",
+  "pytest-cov>=7",
+  "ruff>=0.14",
+  "mypy>=1.18",
+  "pip-audit>=2.9",
 ]
 
-[project.optional-dependencies]
-dev = [
-  "pytest>=8,<9",
-]
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
-addopts = "-q"
+addopts = "-q --strict-markers --cov=el_agentctl --cov-branch --cov-report=term-missing --cov-fail-under=90"
+filterwarnings = ["error"]
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.coverage.run]
+source = ["el_agentctl"]
+# The Docker executor needs a container runtime; its command construction is unit-tested,
+# its execution path is exercised by scripts/verify_sandbox.py (integration).
+omit = ["src/el_agentctl/executors/docker.py"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "C4", "UP", "SIM", "RUF", "S", "N", "PTH", "RET", "TRY", "DTZ", "PL"]
+ignore = ["PLR2004", "TRY003", "PLR0913", "UP040"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S108", "PLR2004", "S603", "S607", "PLC0415"]
+"scripts/**" = ["S101", "S105", "S603", "S607", "T201"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unreachable = true
+mypy_path = "src"
+packages = ["el_agentctl"]
+plugins = ["pydantic.mypy"]

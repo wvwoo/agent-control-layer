@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from hermes_agent.tool_protocol import ParsedToolCall
+from el_agentctl.tool_protocol import ParsedToolCall
 
 
 @dataclass(frozen=True)

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from hermes_agent.security.paths import WorkspacePathError, resolve_workspace_path
+from el_agentctl.security.paths import WorkspacePathError, resolve_workspace_path
 
 
 class WorkspaceToolError(RuntimeError):

@@ -9,8 +9,7 @@ import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
-from hermes_agent.tool_protocol import SandboxRunPythonArguments
-
+from el_agentctl.tool_protocol import SandboxRunPythonArguments
 
 IMAGE_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/@:-]{0,254}$")
 
@@ -61,7 +60,7 @@ def build_docker_command(
         "--ulimit",
         "nofile=64:64",
         "--tmpfs",
-        "/tmp:rw,noexec,nosuid,nodev,size=64m",
+        "/tmp:rw,noexec,nosuid,nodev,size=64m",  # noqa: S108 - tmpfs inside the container, not a host path,
         "--mount",
         f"type=bind,src={workspace},dst=/workspace,readonly",
         "--mount",
@@ -82,7 +81,7 @@ def run_approved_python(
 ) -> DockerExecutionResult:
     """Execute only after an external trusted host has supplied an approval."""
 
-    with tempfile.TemporaryDirectory(prefix="hermes-approved-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="agentctl-approved-") as temporary:
         temporary_path = Path(temporary)
         temporary_path.chmod(0o755)
         runner_directory = temporary_path / "runner"
@@ -102,7 +101,8 @@ def run_approved_python(
         )
         clean_environment = {"PATH": os.environ.get("PATH", "/usr/bin:/bin")}
         try:
-            process = subprocess.run(
+            # Fixed argv built by build_docker_command (no shell, no model-controlled executable).
+            process = subprocess.run(  # noqa: S603
                 command,
                 check=False,
                 shell=False,
@@ -114,8 +114,15 @@ def run_approved_python(
         except subprocess.TimeoutExpired as error:
             return DockerExecutionResult(
                 exit_code=124,
-                stdout=error.stdout or "",
-                stderr=error.stderr or "sandbox timed out",
+                stdout=_as_text(error.stdout),
+                stderr=_as_text(error.stderr) or "sandbox timed out",
                 timed_out=True,
             )
         return DockerExecutionResult(process.returncode, process.stdout, process.stderr)
+
+
+def _as_text(value: bytes | str | None) -> str:
+    """TimeoutExpired may carry bytes even when text=True was requested."""
+    if value is None:
+        return ""
+    return value.decode("utf-8", errors="replace") if isinstance(value, bytes) else value

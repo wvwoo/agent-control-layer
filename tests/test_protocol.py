@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from hermes_agent.tool_protocol import ToolCallError, openai_tools, parse_tool_call
+from el_agentctl.tool_protocol import ToolCallError, openai_tools, parse_tool_call
 
 
 def test_schema_rejects_extra_properties() -> None:
@@ -38,15 +38,11 @@ def test_rendered_openai_schemas_are_strict() -> None:
         function = tool["function"]
         assert function["strict"] is True
         assert function["parameters"]["additionalProperties"] is False
-        assert set(function["parameters"]["required"]) == set(
-            function["parameters"]["properties"]
-        )
+        assert set(function["parameters"]["required"]) == set(function["parameters"]["properties"])
 
 
 def test_committed_registry_matches_runtime_schema() -> None:
     registry = json.loads(
-        (Path(__file__).resolve().parents[1] / "config" / "tool_registry.json").read_text(
-            encoding="utf-8"
-        )
+        (Path(__file__).resolve().parents[1] / "config" / "tool_registry.json").read_text(encoding="utf-8")
     )
     assert registry["tools"] == openai_tools()
