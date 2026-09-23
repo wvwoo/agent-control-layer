@@ -20,7 +20,7 @@ jobs:
           uv run --locked pip-audit --strict --requirement req.txt
           uv run --locked pip-audit --requirement req.txt --format cyclonedx-json --output sbom.cdx.json
       - name: secret scan (full history)
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@v3
         env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
       - uses: actions/upload-artifact@v4
         if: always()
