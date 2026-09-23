@@ -22,6 +22,6 @@ jobs:
       - name: secret scan (full history)
         uses: gitleaks/gitleaks-action@v2
         env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with: { name: evidence, path: "junit.xml\nsbom.cdx.json\ncoverage.xml" }
