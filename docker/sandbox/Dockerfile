@@ -1,4 +1,4 @@
-FROM python:3.12-alpine
+FROM python:3.15-alpine
 
 RUN addgroup -S -g 10001 agentctl \
     && adduser -S -D -H -u 10001 -G agentctl agentctl
